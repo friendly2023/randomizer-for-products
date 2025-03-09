@@ -12,8 +12,18 @@ repositories {
 dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
+    implementation("org.postgresql:postgresql:42.7.5")
+    implementation("io.github.cdimascio:dotenv-java:3.2.0")
 }
 
 tasks.getByName<Test>("test") {
     useJUnitPlatform()
+}
+
+tasks.jar {
+    manifest {
+        attributes(
+            "Main-Class" to "Main"
+        )
+    }
 }

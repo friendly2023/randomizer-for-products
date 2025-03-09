@@ -1,15 +1,35 @@
 version: '3.8'
+
+networks:
+  my_network:
+
 services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: jdbc:postgresql://db:5432/product_db
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: 9Km6BSkt
+    restart: always
+    networks:
+      - my_network
+
   db:
     image: postgres:15
-    container_name: my_postgres
     restart: always
-    env_file:
-      - .env
+    environment:
+      - POSTGRES_PASSWORD=9Km6BSkt
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=product_db
     ports:
       - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
-
+    networks:
+      - my_network
 volumes:
   db_data:
