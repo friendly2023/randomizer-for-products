@@ -1,4 +1,3 @@
-
 package db;
 
 import java.sql.Connection;
@@ -7,7 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class TestConnection {
-    public static void main(String[] args) {
+    public static Connection makeConnection() {
         System.out.println("🔄 Попытка подключения к базе данных...");
 
         try (Connection connection = DatabaseManager.getConnection();
@@ -20,10 +19,14 @@ public class TestConnection {
             } else {
                 System.out.println("❌ Не удалось получить версию PostgreSQL.");
             }
+            return connection;
+
         } catch (SQLException e) {
             System.out.println("❌ Ошибка подключения к БД: " + e.getMessage());
             e.printStackTrace();
         }
+
+        return null;
     }
 }
 
