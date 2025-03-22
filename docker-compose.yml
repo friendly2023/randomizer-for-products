@@ -5,29 +5,36 @@ networks:
 
 services:
   app:
+    env_file: ".env"
     build: .
     ports:
       - "8080:8080"
     depends_on:
-      - db
-    environment:
-      DATABASE_URL: jdbc:postgresql://db:5432/product_db
-      DATABASE_USER: postgres
-      DATABASE_PASSWORD: 9Km6BSkt
+      db:
+        condition: service_healthy
     restart: always
     networks:
       - my_network
 
   db:
-    image: postgres:15
+    image: postgres:16
     restart: always
+    ports:
+      - "${DB_PORT}:${DB_PORT}"
+    env_file: ".env"
     environment:
-      - POSTGRES_PASSWORD=9Km6BSkt
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=product_db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - db_data:/var/lib/postgresql/data
     networks:
       - my_network
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 1s
+      timeout: 5s
+      retries: 10
+
 volumes:
   db_data:

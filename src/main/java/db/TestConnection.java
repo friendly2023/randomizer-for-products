@@ -19,7 +19,20 @@ public class TestConnection {
             } else {
                 System.out.println("❌ Не удалось получить версию PostgreSQL.");
             }
-            return connection;
+            while (true) {
+                try {
+
+                    ResultSet resultSet1 = connection.createStatement()
+                            .executeQuery("SELECT version();");
+                            resultSet1.next();
+                    System.out.println(
+                            resultSet1.getString("version")
+                    );
+                    Thread.sleep(1000); // Пауза на 1 секунду, чтобы не загрузить процессор
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
 
         } catch (SQLException e) {
             System.out.println("❌ Ошибка подключения к БД: " + e.getMessage());
